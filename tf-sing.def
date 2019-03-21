@@ -6,7 +6,7 @@ From: tensorflow/tensorflow:latest-gpu
         pip install --upgrade pip
         echo "Installing h5py"
         pip install h5py
-        pip install pandas numpy scipy scikit-image matplotlib SimpleITK
+        pip install pandas numpy scipy scikit-image matplotlib SimpleITK jupyter
 
 %runscript
   exec python "$@"
