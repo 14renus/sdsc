@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: tensorflow/tensorflow:latest-gpu
+
+%post
+        echo "Upgrading pip"
+        pip install --upgrade pip
+        echo "Installing h5py"
+        pip install h5py
+        pip install pandas numpy scipy scikit-image matplotlib SimpleITK jupyter
+
+%runscript
+  exec python "$@"
+
+%test
+  # Sanity check that the container is operating
+
+  # Test numpy
+  /usr/bin/python -c "import numpy as np;np.__config__.show()"
+  # Ensure that TensorFlow can be imported and session started (session start touches GPU)
+  /usr/bin/python -c "import tensorflow as tf;s = tf.Session()"
