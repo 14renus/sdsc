@@ -1,0 +1,83 @@
+Bootstrap: docker
+From: tensorflow/tensorflow:latest-gpu
+
+%post
+        # Upgrade all packages to their latest versions
+        apt-get -y update && apt-get -y upgrade
+
+        # Install common packages from 'main'
+        apt-get -y install autoconf
+        apt-get -y install automake
+        apt-get -y install build-essential
+        apt-get -y install cmake
+        apt-get -y install libtool
+        apt-get -y install pkg-config
+        apt-get -y install gfortran
+        apt-get -y install zip
+
+        # Make filesystem mount points
+        mkdir /cvmfs /oasis /projects /scratch
+
+        # Use /tmp to store temporary files within the container during the
+        # bootstraping process
+        cd /tmp
+
+        # Install TensorFlow python(2) dependencies
+        apt-get -y install python
+        apt-get -y install python-dev
+        apt-get -y install python-pip
+        apt-get -y install python-six
+        apt-get -y install python-wheel
+        apt-get -y install python-enum34
+        apt-get -y install python-mock
+        apt-get -y install python-numpy
+
+        # Install common python packages for data science and machine learning applications
+        apt-get -y install python-scipy
+        apt-get -y install python-pandas
+        apt-get -y install python-matplotlib
+        apt-get -y install ipython
+        apt-get -y install ipython-notebook
+        apt-get -y install python-sympy
+        apt-get -y install python-nose
+        apt-get -y install python-sklearn
+        apt-get -y install python-mlpy
+        apt-get -y install python-nltk
+        apt-get -y install python-statsmodels
+        apt-get -y install libopencv-dev
+        apt-get -y install python-opencv
+
+        apt-get -y install python-h5py
+
+        pip install scikit-image SimpleITK nibabel
+
+         # Install TensorFlow python3 dependencies
+        apt-get -y install python3
+        apt-get -y install python3-dev
+        apt-get -y install python3-pip
+        apt-get -y install python3-six
+        apt-get -y install python3-wheel
+        apt-get -y install python3-mock
+        apt-get -y install python3-numpy
+
+        apt-get -y install python3-h5py
+
+
+        #echo "Upgrading pip"
+        #pip install --upgrade pip
+        #echo "Installing python packages"
+        #pip install h5py pandas numpy scipy scikit-image matplotlib SimpleITK
+
+%runscript
+  exec python "$@"
+
+%test
+  # Sanity check that the container is operating
+
+  # Test numpy
+  /usr/bin/python -c "import numpy as np;np.__config__.show()"
+  # Ensure that TensorFlow can be imported and session started (session start touches GPU)
+  /usr/bin/python -c "import tensorflow as tf;s = tf.Session()"
+
+
+#taken from: https://github.com/mkandes/naked-singularity/blob/master/definition-files/comet/tensorflow/tensorflow-gpu.def
